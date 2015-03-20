@@ -5,6 +5,7 @@ import java.util.logging.Logger;
 
 import org.junit.Test;
 
+import de.java.netUtils.DownloadFactory.PROTOCOL;
 import de.java.netUtils.download.HTTPDownload;
 import de.java.netUtils.exceptions.DownloadAlreadyStartedException;
 import de.java.netUtils.exceptions.SourceNotAvaibleException;
@@ -42,8 +43,18 @@ public class DownloadTester {
 
 	@Test
 	public void test() {
-		HTTPDownload dl = new HTTPDownload();
+		HTTPDownload dl = null;
 
+		try {
+			dl = (HTTPDownload) DownloadFactory.getInstance().createDownload("jg-erf.ddns.net/files/ERF_ConfGen.jar",
+					PROTOCOL.HTTP);
+		} catch (DownloadAlreadyStartedException e1) {
+			e1.printStackTrace();
+		} catch (SourceNotAvaibleException e1) {
+			e1.printStackTrace();
+		} catch (URISyntaxException e1) {
+			e1.printStackTrace();
+		}
 		dl.addDownloadListener(new IDownloadListener() {
 
 			@Override
@@ -72,13 +83,13 @@ public class DownloadTester {
 						+ dl.downloadPercentDone() + ")");
 			}
 
-//			try {
-//				System.out.println("DL " + dl.getDownloaded() + " >>> " + new String(dl.getDownloaded()));
-//			} catch (DownloadNotFinishedException e) {
-//				e.printStackTrace();
-//			} catch (DownloadNotStartedException e) {
-//				e.printStackTrace();
-//			}
+			//			try {
+			//				System.out.println("DL " + dl.getDownloaded() + " >>> " + new String(dl.getDownloaded()));
+			//			} catch (DownloadNotFinishedException e) {
+			//				e.printStackTrace();
+			//			} catch (DownloadNotStartedException e) {
+			//				e.printStackTrace();
+			//			}
 		} catch (DownloadAlreadyStartedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
