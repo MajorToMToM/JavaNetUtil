@@ -6,8 +6,8 @@ import java.util.logging.Logger;
 
 import de.java.netUtils.download.HTTPDownload;
 import de.java.netUtils.download.HTTPSDownload;
-import de.java.netUtils.exceptions.DownloadAlreadyStartedException;
-import de.java.netUtils.exceptions.SourceNotAvaibleException;
+import de.java.netUtils.exceptions.download.DownloadAlreadyStartedException;
+import de.java.netUtils.exceptions.download.SourceNotAvaibleException;
 import de.java.netUtils.interfaces.IDownload;
 import de.java.netUtils.uri.URI_Utils;
 

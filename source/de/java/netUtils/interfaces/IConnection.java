@@ -1,10 +1,11 @@
-package de.java.netUtils.exceptions;
+package de.java.netUtils.interfaces;
+
+import java.util.logging.Logger;
 
 /**
- * 
  * <hr>
  * <li><strong>Project   </strong>JavaNetUtil</li>
- * <li><strong>Creater   </strong>Thomas A. Mnich</li>
+ * <li><strong>Creater   </strong>Thomas Andreas Mnich</li>
  * <hr>
  * <br>
  * <center>
@@ -18,18 +19,14 @@ package de.java.netUtils.exceptions;
  *
  * <hr>
  */
-public class DownloadNotFinishedException extends Exception {
-	/**
-	 * <hr>
-	 * The field serialVersionUID of type long
-	 * <hr>
-	 */
-	private static final long serialVersionUID = 3897364596656252796L;
+public interface IConnection extends ICanCloseConnection {
 
-	/**
-	 * The standard constructor of the DownloadNotFinishedException class
-	 */
-	public DownloadNotFinishedException() {
-		super("The download is not yet finished!");
-	}
+	public IPort getDestinationPort();
+
+	public void setDestinationPort(IPort port);
+
+	public IPort getSourcePort();
+
+	public void setSourcePort(IPort port);
+	
 }

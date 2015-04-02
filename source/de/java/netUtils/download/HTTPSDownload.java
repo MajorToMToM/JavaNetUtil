@@ -11,10 +11,10 @@ import java.util.List;
 
 import javax.net.ssl.HttpsURLConnection;
 
-import de.java.netUtils.exceptions.DownloadAlreadyStartedException;
-import de.java.netUtils.exceptions.DownloadNotFinishedException;
-import de.java.netUtils.exceptions.DownloadNotStartedException;
-import de.java.netUtils.exceptions.SourceNotAvaibleException;
+import de.java.netUtils.exceptions.download.DownloadAlreadyStartedException;
+import de.java.netUtils.exceptions.download.DownloadNotFinishedException;
+import de.java.netUtils.exceptions.download.DownloadNotStartedException;
+import de.java.netUtils.exceptions.download.SourceNotAvaibleException;
 import de.java.netUtils.handlingSystem.listeners.implementations.IDownloadListener;
 import de.java.netUtils.handlingSystem.listeners.implementations.IHasDownloadListeners;
 import de.java.netUtils.interfaces.IDownload;

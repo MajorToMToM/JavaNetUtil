@@ -1,4 +1,8 @@
-package de.java.netUtils.exceptions;
+package de.java.netUtils;
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.logging.Logger;
 
 /**
  * <hr>
@@ -17,20 +21,32 @@ package de.java.netUtils.exceptions;
  *
  * <hr>
  */
-public class SourceNotAvaibleException extends Exception {
-	
-	/**
-	 * <hr>
-	 * The field serialVersionUID of type long
-	 * <hr>
-	 */
-	private static final long serialVersionUID = 3598988326414065941L;
+public class ServerFactory {
+
+	private static final ExecutorService pool = Executors.newCachedThreadPool();
+
+	private static ServerFactory INSTANCE;
 
 	/**
-	 * The standard constructor of the SourceNotAvaibleException class
+	 * <hr>
+	 * @return the iNSTANCE
+	 * <hr>
 	 */
-	public SourceNotAvaibleException() {
-		super("The source is not avaible!");
+	public synchronized static ServerFactory getINSTANCE() {
+		if (INSTANCE == null) {
+			INSTANCE = new ServerFactory();
+		}
+		return INSTANCE;
+	}
+
+	/**
+	 * The Logger of the ServerFactory Class
+	 */
+	private static final Logger LOGGER = Logger.getLogger(ServerFactory.class.getName());
+
+	/**
+	 * The standard constructor of the ServerFactory class
+	 */
+	public ServerFactory() {
 	}
 }
-

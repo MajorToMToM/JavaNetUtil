@@ -1,10 +1,11 @@
-package de.java.netUtils.exceptions;
+package de.java.netUtils.interfaces;
+
+import java.util.logging.Logger;
 
 /**
- * 
  * <hr>
  * <li><strong>Project   </strong>JavaNetUtil</li>
- * <li><strong>Creater   </strong>Thomas A. Mnich</li>
+ * <li><strong>Creater   </strong>Thomas Andreas Mnich</li>
  * <hr>
  * <br>
  * <center>
@@ -18,19 +19,9 @@ package de.java.netUtils.exceptions;
  *
  * <hr>
  */
-public class DownloadNotStartedException extends Exception {
-	/**
-	 * <hr>
-	 * The field serialVersionUID of type long
-	 * <hr>
-	 */
-	private static final long serialVersionUID = -7359779768254513433L;
+public interface ICanReceiveMessages {
 
-	/**
-	 * The standard constructor of the DownloadNotStartedException class
-	 */
-	public DownloadNotStartedException() {
-		super("The download has not been started yet!");
-	}
-
+	public String receiveMessage();
+	
 }
+

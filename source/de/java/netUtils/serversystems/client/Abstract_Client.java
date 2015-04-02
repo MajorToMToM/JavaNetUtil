@@ -1,9 +1,16 @@
-package de.java.netUtils.exceptions;
+package de.java.netUtils.serversystems.client;
+
+import java.util.logging.Logger;
+
+import de.java.netUtils.interfaces.ICanOpenConnection;
+import de.java.netUtils.interfaces.IClient;
+import de.java.netUtils.interfaces.IPort;
+import de.java.netUtils.serversystems.Abstract_Connection;
 
 /**
  * <hr>
  * <li><strong>Project   </strong>JavaNetUtil</li>
- * <li><strong>Creater   </strong>Thomas A. Mnich</li>
+ * <li><strong>Creater   </strong>Thomas Andreas Mnich</li>
  * <hr>
  * <br>
  * <center>
@@ -17,19 +24,10 @@ package de.java.netUtils.exceptions;
  *
  * <hr>
  */
-public class DownloadAlreadyFinishedException extends Exception {
-
+public abstract class Abstract_Client extends Abstract_Connection implements IClient {
 	/**
-	 * <hr>
-	 * The field serialVersionUID of type long
-	 * <hr>
+	 * The Logger of the Abstract_Client Class
 	 */
-	private static final long serialVersionUID = 8243679370752091875L;
+	private static final Logger LOGGER = Logger.getLogger(Abstract_Client.class.getName());
 
-	/**
-	 * The standard constructor of the DownloadAlreadyFinishedException class
-	 */
-	public DownloadAlreadyFinishedException() {
-		super("The download was already finished!");
-	}
 }

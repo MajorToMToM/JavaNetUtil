@@ -7,8 +7,8 @@ import org.junit.Test;
 
 import de.java.netUtils.DownloadFactory.PROTOCOL;
 import de.java.netUtils.download.HTTPDownload;
-import de.java.netUtils.exceptions.DownloadAlreadyStartedException;
-import de.java.netUtils.exceptions.SourceNotAvaibleException;
+import de.java.netUtils.exceptions.download.DownloadAlreadyStartedException;
+import de.java.netUtils.exceptions.download.SourceNotAvaibleException;
 import de.java.netUtils.handlingSystem.listeners.implementations.IDownloadListener;
 import de.java.netUtils.uri.URI_Utils;
 

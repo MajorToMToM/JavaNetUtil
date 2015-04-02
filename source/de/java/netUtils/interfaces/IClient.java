@@ -1,9 +1,11 @@
-package de.java.netUtils.exceptions;
+package de.java.netUtils.interfaces;
+
+import java.util.logging.Logger;
 
 /**
  * <hr>
  * <li><strong>Project   </strong>JavaNetUtil</li>
- * <li><strong>Creater   </strong>Thomas A. Mnich</li>
+ * <li><strong>Creater   </strong>Thomas Andreas Mnich</li>
  * <hr>
  * <br>
  * <center>
@@ -17,19 +19,8 @@ package de.java.netUtils.exceptions;
  *
  * <hr>
  */
-public class DownloadAlreadyStartedException extends Exception {
+public interface IClient extends IConnection, ICanOpenConnection {
 
-	/**
-	 * <hr>
-	 * The field serialVersionUID of type long
-	 * <hr>
-	 */
-	private static final long serialVersionUID = -3680343145057713478L;
+	void sendMessage(String message);
 
-	/**
-	 * The standard constructor of the DownloadAlreadyStartedException class
-	 */
-	public DownloadAlreadyStartedException() {
-		super("The download was already started!");
-	}
 }

@@ -2,10 +2,10 @@ package de.java.netUtils.interfaces;
 
 import java.net.URI;
 
-import de.java.netUtils.exceptions.DownloadAlreadyStartedException;
-import de.java.netUtils.exceptions.DownloadNotFinishedException;
-import de.java.netUtils.exceptions.DownloadNotStartedException;
-import de.java.netUtils.exceptions.SourceNotAvaibleException;
+import de.java.netUtils.exceptions.download.DownloadAlreadyStartedException;
+import de.java.netUtils.exceptions.download.DownloadNotFinishedException;
+import de.java.netUtils.exceptions.download.DownloadNotStartedException;
+import de.java.netUtils.exceptions.download.SourceNotAvaibleException;
 
 /**
  * 
