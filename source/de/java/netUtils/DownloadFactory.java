@@ -68,7 +68,7 @@ public class DownloadFactory {
 	 */
 	private DownloadFactory() {
 	}
-
+	
 	/**
 	 * 
 	 * <hr>
@@ -81,24 +81,31 @@ public class DownloadFactory {
 	 * <hr>
 	 * @param url The url.
 	 * @return Returns a valid {@link IDownload} object or null if the url is not valid.
-	 * @throws DownloadAlreadyStartedException <b>Can be ignored because this is never thrown on freshly initialized {@link IDownload} objects.</b>
 	 * @throws SourceNotAvaibleException The URL is checked on the invokation of the setURI method.
 	 * @throws URISyntaxException
 	 * @throws NoValidProtocolSpecifiedException 
 	 */
-	public IDownload createDownload(String url) throws DownloadAlreadyStartedException, SourceNotAvaibleException,
+	public IDownload createDownload(String url) throws SourceNotAvaibleException,
 			URISyntaxException, NoValidProtocolSpecifiedException {
 		IDownload downloadObject = null;
 
 		if (url.startsWith(PROTOCOL.HTTP.getShortVal() + "://")) {
 			downloadObject = new HTTPDownload();
-			downloadObject.setURI(new URI(url));
+			try {
+				downloadObject.setURI(new URI(url));
+			} catch (DownloadAlreadyStartedException e) {
+				e.printStackTrace();
+			}
 			return downloadObject;
 		}
 
 		if (url.startsWith(PROTOCOL.HTTPS.getShortVal() + "://")) {
 			downloadObject = new HTTPSDownload();
-			downloadObject.setURI(new URI(url));
+			try {
+				downloadObject.setURI(new URI(url));
+			} catch (DownloadAlreadyStartedException e) {
+				e.printStackTrace();
+			}
 			return downloadObject;
 		}
 
@@ -116,13 +123,11 @@ public class DownloadFactory {
 	 * @param url
 	 * @param protocol
 	 * @return
-	 * @throws DownloadAlreadyStartedException
 	 * @throws SourceNotAvaibleException
 	 * @throws URISyntaxException
 	 * @throws NoValidProtocolSpecifiedException 
 	 */
-	public IDownload createDownload(String url, PROTOCOL protocol) throws DownloadAlreadyStartedException,
-			SourceNotAvaibleException, URISyntaxException {
+	public IDownload createDownload(String url, PROTOCOL protocol) throws SourceNotAvaibleException, URISyntaxException {
 		IDownload downloadObject = null;
 
 		if (protocol == PROTOCOL.HTTP) {
@@ -132,7 +137,11 @@ public class DownloadFactory {
 			}
 
 			downloadObject = new HTTPDownload();
-			downloadObject.setURI(URI_Utils.createHTTPURI(url));
+			try {
+				downloadObject.setURI(URI_Utils.createHTTPURI(url));
+			} catch (DownloadAlreadyStartedException e) {
+				e.printStackTrace();
+			}
 			return downloadObject;
 		}
 
@@ -143,7 +152,11 @@ public class DownloadFactory {
 			}
 
 			downloadObject = new HTTPSDownload();
-			downloadObject.setURI(URI_Utils.createHTTPSURI(url));
+			try {
+				downloadObject.setURI(URI_Utils.createHTTPSURI(url));
+			} catch (DownloadAlreadyStartedException e) {
+				e.printStackTrace();
+			}
 			return downloadObject;
 		}
 

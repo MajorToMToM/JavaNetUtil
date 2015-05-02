@@ -1,5 +1,6 @@
 package de.java.netUtils;
 
+import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.logging.Logger;
 
@@ -8,10 +9,13 @@ import org.junit.Test;
 import de.java.netUtils.DownloadFactory.PROTOCOL;
 import de.java.netUtils.exceptions.download.DownloadAlreadyStartedException;
 import de.java.netUtils.exceptions.download.DownloadCanNotBeLaunchedException;
+import de.java.netUtils.exceptions.download.DownloadNotFinishedException;
+import de.java.netUtils.exceptions.download.DownloadNotStartedException;
 import de.java.netUtils.exceptions.download.NoValidProtocolSpecifiedException;
 import de.java.netUtils.exceptions.download.SourceNotAvaibleException;
 import de.java.netUtils.handlingSystem.listeners.implementations.IDownloadListener;
 import de.java.netUtils.interfaces.IDownload;
+import de.java.netUtils.utils.Download_Utils;
 
 /**
  * <hr>
@@ -44,16 +48,55 @@ public class DownloadTester {
 
 	@Test
 	public void test() {
-		IDownload dl = null;
 
 		try {
-			dl = DownloadFactory.getInstance().createDownload("jg-erf.ddns.net/files/ERF_ConfGen.jar",
+			IDownload dl = DownloadFactory.getInstance().createDownload("jg-erf.ddns.net/index.html",
 					PROTOCOL.HTTP);
 		
 //			dl = DownloadFactory.getInstance().createDownload("http://jg-erf.ddns.net/files/ERF_ConfGen.jar");
 			
-		} catch (DownloadAlreadyStartedException e1) {
-			e1.printStackTrace();
+			dl.addDownloadListener(new IDownloadListener() {
+
+				@Override
+				public void onStarted() {
+					System.out.println("Started!");
+				}
+
+				@Override
+				public void onInterrupted() {
+					System.out.println("Interrupted!");
+				}
+
+				@Override
+				public void onFinished() {
+					System.out.println("Finished!");
+					try {
+						try {
+							System.out.println("Downloaded this :\n" + Download_Utils.retrieveListOfRows(dl.getDownloaded()));
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					} catch (DownloadNotFinishedException | DownloadNotStartedException e) {
+						e.printStackTrace();
+					}
+				}
+			});
+
+			try {
+
+				dl.startDownload();
+
+				while (!dl.isFinished() && !dl.isDownloadInterrupted()) {
+					System.out.println(dl.getDownloadProgess_asString());
+				}
+
+			} catch (DownloadAlreadyStartedException e) {
+				e.printStackTrace();
+			} catch (DownloadCanNotBeLaunchedException e) {
+				e.printStackTrace();
+			}
+			
 		} catch (SourceNotAvaibleException e1) {
 			e1.printStackTrace();
 		} catch (URISyntaxException e1) {
@@ -62,36 +105,6 @@ public class DownloadTester {
 //			e.printStackTrace();
 		}
 		
-		dl.addDownloadListener(new IDownloadListener() {
-
-			@Override
-			public void onStarted() {
-				System.out.println("Started!");
-			}
-
-			@Override
-			public void onInterrupted() {
-				System.out.println("Interrupted!");
-			}
-
-			@Override
-			public void onFinished() {
-				System.out.println("Finished!");
-			}
-		});
-
-		try {
-
-			dl.startDownload();
-
-			while (!dl.isFinished() && !dl.isDownloadInterrupted()) {
-				System.out.println(dl.getDownloadProgess_asString());
-			}
-
-		} catch (DownloadAlreadyStartedException e) {
-			e.printStackTrace();
-		} catch (DownloadCanNotBeLaunchedException e) {
-			e.printStackTrace();
-		}
+		
 	}
 }
