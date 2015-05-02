@@ -50,6 +50,9 @@ public class HTTPDownload implements IDownload, IHasDownloadListeners {
 
 	private URI uri;
 
+	private long download_Started_millis;
+	private long download_Finished_millis;
+
 	private boolean started = false, finished = false, interrupted = false, secure = false, canLaunch = false;
 
 	/**
@@ -88,6 +91,9 @@ public class HTTPDownload implements IDownload, IHasDownloadListeners {
 
 					downloaded = out.toByteArray();
 					finished = true;
+
+					download_Finished_millis = System.currentTimeMillis();
+
 					onFinished();
 
 				} catch (IOException e1) {
@@ -228,6 +234,7 @@ public class HTTPDownload implements IDownload, IHasDownloadListeners {
 			if (canLaunch) {
 				started = true;
 				onStarted();
+				download_Started_millis = System.currentTimeMillis();
 				downloader.start();
 			}
 
@@ -322,4 +329,13 @@ public class HTTPDownload implements IDownload, IHasDownloadListeners {
 		listeners.add(listener);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see de.java.netUtils.interfaces.IDownload#getDownloadProgess_asString()
+	 */
+	@Override
+	public String getDownloadProgess_asString() {
+		return "HTTPDownload [ " + uri + " | Running: " + (System.currentTimeMillis() - download_Started_millis) + " milliseconds ] "
+				+ bytesDownloaded() + " of " + bytesToDownload() + " Bytes (" + downloadPercentDone() + " %) downloaded.";
+	}
 }

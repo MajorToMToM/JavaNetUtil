@@ -8,8 +8,11 @@ import org.junit.Test;
 import de.java.netUtils.DownloadFactory.PROTOCOL;
 import de.java.netUtils.download.HTTPDownload;
 import de.java.netUtils.exceptions.download.DownloadAlreadyStartedException;
+import de.java.netUtils.exceptions.download.DownloadNotStartedException;
+import de.java.netUtils.exceptions.download.NoValidProtocolSpecifiedException;
 import de.java.netUtils.exceptions.download.SourceNotAvaibleException;
 import de.java.netUtils.handlingSystem.listeners.implementations.IDownloadListener;
+import de.java.netUtils.interfaces.IDownload;
 import de.java.netUtils.uri.URI_Utils;
 
 /**
@@ -43,18 +46,24 @@ public class DownloadTester {
 
 	@Test
 	public void test() {
-		HTTPDownload dl = null;
+		IDownload dl = null;
 
 		try {
-			dl = (HTTPDownload) DownloadFactory.getInstance().createDownload("jg-erf.ddns.net/files/ERF_ConfGen.jar",
-					PROTOCOL.HTTP);
+//			dl = (HTTPDownload) DownloadFactory.getInstance().createDownload("jg-erf.ddns.net/files/ERF_ConfGen.jar",
+//					PROTOCOL.HTTP);
+		
+			dl = DownloadFactory.getInstance().createDownload("http://jg-erf.ddns.net/files/ERF_ConfGen.jar");
+			
 		} catch (DownloadAlreadyStartedException e1) {
 			e1.printStackTrace();
 		} catch (SourceNotAvaibleException e1) {
 			e1.printStackTrace();
 		} catch (URISyntaxException e1) {
 			e1.printStackTrace();
+		} catch (NoValidProtocolSpecifiedException e) {
+			e.printStackTrace();
 		}
+		
 		dl.addDownloadListener(new IDownloadListener() {
 
 			@Override
@@ -75,12 +84,13 @@ public class DownloadTester {
 
 		try {
 
-			dl.setURI(URI_Utils.createHTTPURI("jg-erf.ddns.net/files/ERF_ConfGen.jar"));
+//			dl.setURI(URI_Utils.createHTTPURI("jg-erf.ddns.net/files/ERF_ConfGen.jar"));
 			dl.startDownload();
 
+			long start = System.currentTimeMillis();
+			
 			while (!dl.isFinished() && !dl.isDownloadInterrupted()) {
-				System.out.println("DL " + dl.bytesDownloaded() + "/" + dl.bytesToDownload() + " ("
-						+ dl.downloadPercentDone() + ")");
+				System.out.println(dl.getDownloadProgess_asString());
 			}
 
 			//			try {
@@ -93,12 +103,12 @@ public class DownloadTester {
 		} catch (DownloadAlreadyStartedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (SourceNotAvaibleException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (URISyntaxException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+//		} catch (SourceNotAvaibleException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (URISyntaxException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
 		}
 	}
 }

@@ -7,6 +7,7 @@ import java.util.logging.Logger;
 import de.java.netUtils.download.HTTPDownload;
 import de.java.netUtils.download.HTTPSDownload;
 import de.java.netUtils.exceptions.download.DownloadAlreadyStartedException;
+import de.java.netUtils.exceptions.download.NoValidProtocolSpecifiedException;
 import de.java.netUtils.exceptions.download.SourceNotAvaibleException;
 import de.java.netUtils.interfaces.IDownload;
 import de.java.netUtils.uri.URI_Utils;
@@ -44,10 +45,21 @@ public class DownloadFactory {
 	}
 
 	public enum PROTOCOL {
-		HTTP(), HTTPS();
+		HTTP("http"), HTTPS("https");
 
-		private PROTOCOL() {
+		private final String shortVal;
 
+		private PROTOCOL(String shortVal) {
+			this.shortVal = shortVal;
+		}
+
+		/**
+		 * <hr>
+		 * @return the shortVal
+		 * <hr>
+		 */
+		public String getShortVal() {
+			return shortVal;
 		}
 	}
 
@@ -57,21 +69,84 @@ public class DownloadFactory {
 	private DownloadFactory() {
 	}
 
+	/**
+	 * 
+	 * <hr>
+	 *
+	 * This method analyses the {@link String} url if it is a valid url. 
+	 * If no proper {@link PROTOCOL} is found the returnd value is null. 
+	 * In fact if the download {@link PROTOCOL} is 
+	 * known the {@link #createDownload(String, PROTOCOL)} should be used.<br>
+	 *
+	 * <hr>
+	 * @param url The url.
+	 * @return Returns a valid {@link IDownload} object or null if the url is not valid.
+	 * @throws DownloadAlreadyStartedException
+	 * @throws SourceNotAvaibleException
+	 * @throws URISyntaxException
+	 * @throws NoValidProtocolSpecifiedException 
+	 */
+	public IDownload createDownload(String url) throws DownloadAlreadyStartedException, SourceNotAvaibleException,
+			URISyntaxException, NoValidProtocolSpecifiedException {
+		IDownload downloadObject = null;
+
+		if (url.startsWith(PROTOCOL.HTTP.getShortVal() + "://")) {
+			downloadObject = new HTTPDownload();
+			downloadObject.setURI(new URI(url));
+			return downloadObject;
+		}
+
+		if (url.startsWith(PROTOCOL.HTTPS.getShortVal() + "://")) {
+			downloadObject = new HTTPSDownload();
+			downloadObject.setURI(new URI(url));
+			return downloadObject;
+		}
+		
+		throw new NoValidProtocolSpecifiedException();
+
+	}
+
+	/**
+	 * 
+	 * <hr>
+	 *
+	 * This method creates out of an url and a specific {@link PROTOCOL} a {@link IDownload} object.<br>
+	 *
+	 * <hr>
+	 * @param url
+	 * @param protocol
+	 * @return
+	 * @throws DownloadAlreadyStartedException
+	 * @throws SourceNotAvaibleException
+	 * @throws URISyntaxException
+	 * @throws NoValidProtocolSpecifiedException 
+	 */
 	public IDownload createDownload(String url, PROTOCOL protocol) throws DownloadAlreadyStartedException,
 			SourceNotAvaibleException, URISyntaxException {
 		IDownload downloadObject = null;
-		
+
 		if (protocol == PROTOCOL.HTTP) {
+
+			if (url.startsWith(PROTOCOL.HTTP.getShortVal() + "://")) {
+				url = url.substring(PROTOCOL.HTTP.getShortVal().length() + "://".length());
+			}
+
 			downloadObject = new HTTPDownload();
 			downloadObject.setURI(URI_Utils.createHTTPURI(url));
+			return downloadObject;
 		}
-		
+
 		if (protocol == PROTOCOL.HTTPS) {
+
+			if (url.startsWith(PROTOCOL.HTTP.getShortVal() + "://")) {
+				url = url.substring(PROTOCOL.HTTP.getShortVal().length() + "://".length());
+			}
+
 			downloadObject = new HTTPSDownload();
 			downloadObject.setURI(URI_Utils.createHTTPSURI(url));
+			return downloadObject;
 		}
-		
-		
-		return downloadObject;
+
+		return null;
 	}
 }

@@ -1,4 +1,4 @@
-package de.java.netUtils.interfaces;
+package de.java.netUtils.exceptions.download;
 
 import java.util.logging.Logger;
 
@@ -19,18 +19,17 @@ import java.util.logging.Logger;
  *
  * <hr>
  */
-public interface IPort {
+public class NoValidProtocolSpecifiedException extends Exception {
+	/**
+	 * The Logger of the NoValidProtocolSpecifiedException Class
+	 */
+	private static final Logger LOGGER = Logger.getLogger(NoValidProtocolSpecifiedException.class.getName());
 
-	public static final int MAXPORT = 65535, MINPORT = 1100;
-
-	public static boolean isPortNumberValid(int portNumber) {
-		return (portNumber < MAXPORT && portNumber > MINPORT);
+	/**
+	 * The standard constructor of the NoValidProtocolSpecifiedException class
+	 */
+	public NoValidProtocolSpecifiedException() {
+		super("No valid Protocol was specified!");
 	}
-
-	public boolean isAvaible();
-
-	public int getPortNumber();
-
-	public void setPortNumber(int portnumber);
-
 }
+

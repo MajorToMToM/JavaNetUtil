@@ -1,6 +1,7 @@
 package de.java.netUtils.interfaces;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.logging.Logger;
 
 /**
@@ -22,12 +23,26 @@ import java.util.logging.Logger;
  */
 public interface IPortManager {
 
-	Collection<IPort> getAvaiblePorts();
-
 	Collection<IPort> getAllPorts();
 
-	void addPort(IPort port);
+	public enum PORT_CREATION {
+		EXPLICIT(), FIRSTFREE(), EXPLICIT_LIST(), IMPLICIT();
+	}
 
-	void removePort(IPort port);
+	/**
+	 * 
+	 * <hr>
+	 *
+	 * This method is used to create a new {@link IPort}. 
+	 * It is important to check which creationtype is used from the {@link PORT_CREATION} enumeration. 
+	 * It is possible that with some {@link PORT_CREATION} types only the first Integer of the portNumbers parameter is used.
+	 * <br>
+	 *
+	 * <hr>
+	 * @param creation The creation way.
+	 * @param portNumbers The portNumber criteria. It can describe the range or the ports that might be checked if these are avaible.
+	 * @return
+	 */
+	IPort getPort(PORT_CREATION creationType, List<Integer> portNumbers);
 
 }

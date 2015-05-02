@@ -6,6 +6,7 @@ import de.java.netUtils.exceptions.download.DownloadAlreadyStartedException;
 import de.java.netUtils.exceptions.download.DownloadNotFinishedException;
 import de.java.netUtils.exceptions.download.DownloadNotStartedException;
 import de.java.netUtils.exceptions.download.SourceNotAvaibleException;
+import de.java.netUtils.handlingSystem.listeners.implementations.IDownloadListener;
 
 /**
  * 
@@ -26,7 +27,7 @@ import de.java.netUtils.exceptions.download.SourceNotAvaibleException;
  * <hr>
  */
 public interface IDownload {
-	
+
 	/**
 	 * 
 	 * <hr>
@@ -179,5 +180,26 @@ public interface IDownload {
 	 * @return <b>true</b> only if the {@link IDownload} was interrupted in any way like, abortion by the user or the unavailability of the source file.
 	 */
 	public boolean isDownloadInterrupted();
+
+	/**
+	 * <hr>
+	 *
+	 * This method can be used to add a {@link IDownloadListener} to this {@link IDownload} object. 
+	 * The {@link IDownloadListener} can be used to react on specific events of the {@link IDownload} object..<br>
+	 *
+	 * <hr>
+	 * @param iDownloadListener The {@link IDownloadListener} to add.
+	 */
+	public void addDownloadListener(IDownloadListener iDownloadListener);
+
+	/**
+	 * <hr>
+	 *
+	 * This method should be used to display a representation of the {@link IDownload} download progress.<br>
+	 *
+	 * <hr>
+	 * @return
+	 */
+	public String getDownloadProgess_asString();
 
 }

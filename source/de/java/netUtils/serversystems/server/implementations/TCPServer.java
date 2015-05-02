@@ -35,6 +35,7 @@ public class TCPServer extends Abstract_Server<TCPClient> {
 	private static final Logger LOGGER = Logger.getLogger(TCPServer.class.getName());
 
 	private ServerSocket socket;
+	private boolean running;
 	private final List<TCPClient> clients = new ArrayList<>();
 
 	/**
@@ -48,7 +49,7 @@ public class TCPServer extends Abstract_Server<TCPClient> {
 	 * @see de.java.netUtils.interfaces.IServer#addClient(de.java.netUtils.interfaces.IClient)
 	 */
 	@Override
-	public void addClient(TCPClient client) {
+	public final void addClient(TCPClient client) {
 		clients.add(client);
 	}
 
@@ -56,7 +57,7 @@ public class TCPServer extends Abstract_Server<TCPClient> {
 	 * @see de.java.netUtils.interfaces.IServer#removeClient(de.java.netUtils.interfaces.IClient)
 	 */
 	@Override
-	public void removeClient(TCPClient client) {
+	public final void removeClient(TCPClient client) {
 		clients.remove(client);
 		client.closeConnection();
 	}
@@ -70,42 +71,16 @@ public class TCPServer extends Abstract_Server<TCPClient> {
 	}
 
 	/* (non-Javadoc)
-	 * @see de.java.netUtils.interfaces.ICanCloseConnection#closeConnection()
-	 */
-	@Override
-	public void closeConnection() {
-		try {
-			for (TCPClient client : clients) {
-				client.closeConnection();
-			}
-			socket.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-
-	/* (non-Javadoc)
-	 * @see de.java.netUtils.serversystems.server.Abstract_Server#startServer()
-	 */
-	@Override
-	public void startServer() {
-		try {
-			socket = new ServerSocket(this.getSourcePort().getPortNumber());
-			super.startServer();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	/* (non-Javadoc)
 	 * @see de.java.netUtils.serversystems.server.Abstract_Server#listenForConnection()
 	 */
 	@Override
 	public void listenForConnection() {
 		try {
-			TCPClient client = new TCPClient();
-			client.setSocket(socket.accept());
+			while (running) {
+				TCPClient client = new TCPClient();
+				client.setSocket(socket.accept());
+				addClient(client);
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -117,6 +92,31 @@ public class TCPServer extends Abstract_Server<TCPClient> {
 	@Override
 	public String receiveMessage() {
 		return null;
+	}
+
+	/* (non-Javadoc)
+	 * @see de.java.netUtils.interfaces.ICanCloseConnection#closeConnection()
+	 */
+	@Override
+	public final void closeConnection() {
+		for (TCPClient client : clients) {
+			client.closeConnection();
+		}
+	}
+
+	/* (non-Javadoc)
+	 * @see de.java.netUtils.serversystems.server.Abstract_Server#closeServer()
+	 */
+	@Override
+	public final void closeServer() {
+		try {
+			closeConnection();
+			socket.close();
+			running = false;
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }

@@ -1,13 +1,24 @@
-package de.java.netUtils.serversystems.server;
+package de.java.netUtils;
 
+import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 import java.util.logging.Logger;
 
-import de.java.netUtils.interfaces.IClient;
+import org.junit.Test;
+
+import de.java.netUtils.DownloadFactory.PROTOCOL;
+import de.java.netUtils.download.HTTPDownload;
+import de.java.netUtils.exceptions.download.DownloadAlreadyStartedException;
+import de.java.netUtils.exceptions.download.SourceNotAvaibleException;
+import de.java.netUtils.handlingSystem.listeners.implementations.IDownloadListener;
+import de.java.netUtils.interfaces.IConnection;
 import de.java.netUtils.interfaces.IPort;
-import de.java.netUtils.interfaces.IServer;
-import de.java.netUtils.serversystems.Abstract_Connection;
+import de.java.netUtils.interfaces.IPortManager;
+import de.java.netUtils.serversystems.server.implementations.TCPServer;
+import de.java.netUtils.uri.URI_Utils;
 
 /**
  * <hr>
@@ -26,39 +37,24 @@ import de.java.netUtils.serversystems.Abstract_Connection;
  *
  * <hr>
  */
-public abstract class Abstract_Server<T extends IClient> extends Abstract_Connection implements IServer<T> {
+public class ServerTester {
+	/**
+	 * The Logger of the ServerTester Class
+	 */
+	private static final Logger LOGGER = Logger.getLogger(ServerTester.class.getName());
 
 	/**
-	 * The Logger of the Abstract_Server Class
+	 * <hr>
+	 * The constructor of ServerTester.java.
+	 * <hr>
 	 */
-	private static final Logger LOGGER = Logger.getLogger(Abstract_Server.class.getName());
-
-	/* (non-Javadoc)
-	 * @see de.java.netUtils.interfaces.IServer#startServer()
-	 */
-	@Override
-	public final void startServer() {
-		listenForConnection();
+	public ServerTester() {
+		
 	}
-
-	/**
-	 * 
-	 * <hr>
-	 *
-	 * This method shuts down the server finally. All connections are closed.<br>
-	 *
-	 * <hr>
-	 */
-	public abstract void closeServer();
-
-	/**
-	 * 
-	 * <hr>
-	 *
-	 * This method is called after the server is launched. This method should be used to determine if a connection is requested.<br>
-	 *
-	 * <hr>
-	 */
-	public abstract void listenForConnection();
-
+	
+	@Test
+	public void test() {
+		TCPServer server = new TCPServer();
+	}
 }
+
