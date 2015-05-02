@@ -2,9 +2,7 @@ package de.java.netUtils.serversystems.client;
 
 import java.util.logging.Logger;
 
-import de.java.netUtils.interfaces.ICanOpenConnection;
 import de.java.netUtils.interfaces.IClient;
-import de.java.netUtils.interfaces.IPort;
 import de.java.netUtils.serversystems.Abstract_Connection;
 
 /**

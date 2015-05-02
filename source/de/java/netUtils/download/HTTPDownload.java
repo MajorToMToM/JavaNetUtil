@@ -9,9 +9,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.net.ssl.HttpsURLConnection;
-
 import de.java.netUtils.exceptions.download.DownloadAlreadyStartedException;
+import de.java.netUtils.exceptions.download.DownloadCanNotBeLaunchedException;
 import de.java.netUtils.exceptions.download.DownloadNotFinishedException;
 import de.java.netUtils.exceptions.download.DownloadNotStartedException;
 import de.java.netUtils.exceptions.download.SourceNotAvaibleException;
@@ -39,21 +38,21 @@ import de.java.netUtils.utils.Math_Utils;
  */
 public class HTTPDownload implements IDownload, IHasDownloadListeners {
 
-	private final List<IDownloadListener> listeners = new ArrayList<>();
+	protected final List<IDownloadListener> listeners = new ArrayList<>();
 
-	private final Thread downloader;
+	protected Thread downloader;
 
-	private byte[] downloaded;
+	protected byte[] downloaded;
 
-	private long currentDownloaded = 0;
-	private long toDownload = 0;
+	protected long currentDownloaded = 0;
+	protected long toDownload = 0;
 
-	private URI uri;
+	protected URI uri;
 
-	private long download_Started_millis;
-	private long download_Finished_millis;
+	protected long download_Started_millis;
+	protected long download_Finished_millis;
 
-	private boolean started = false, finished = false, interrupted = false, secure = false, canLaunch = false;
+	protected boolean started = false, finished = false, interrupted = false, secure = false, canLaunch = false;
 
 	/**
 	 * <hr>
@@ -61,7 +60,11 @@ public class HTTPDownload implements IDownload, IHasDownloadListeners {
 	 * <hr>
 	 */
 	public HTTPDownload() {
-		downloader = new Thread() {
+
+	}
+
+	protected Thread getDownloaderThread() {
+		return new Thread() {
 
 			/* (non-Javadoc)
 			 * @see java.lang.Thread#run()
@@ -119,7 +122,7 @@ public class HTTPDownload implements IDownload, IHasDownloadListeners {
 	 * @return file size in bytes
 	 * @throws IOException
 	 */
-	private final long getFileSize(HttpURLConnection con) throws IOException {
+	protected final long getFileSize(HttpURLConnection con) throws IOException {
 		try {
 			return Long.parseLong(con.getHeaderField("Content-Length"));
 		} catch (NumberFormatException nfe) {
@@ -127,20 +130,12 @@ public class HTTPDownload implements IDownload, IHasDownloadListeners {
 		return 0;
 	}
 
-	private final HttpURLConnection getConnection(URI uri) throws IOException {
+	protected HttpURLConnection getConnection(URI uri) throws IOException {
 		final URL u = uri.toURL();
-		if (u.getProtocol().equals("https")) {
-			return (HttpsURLConnection) u.openConnection();
-		} else {
-			if (u.getProtocol().equals("http")) {
-				return (HttpURLConnection) u.openConnection();
-			} else {
-				return null;
-			}
-		}
+		return (HttpURLConnection) u.openConnection();
 	}
 
-	private final boolean isAvaible(URI uri) throws IOException {
+	protected final boolean isAvaible(URI uri) throws IOException {
 		HttpURLConnection con = getConnection(uri);
 
 		if (con == null) {
@@ -181,7 +176,7 @@ public class HTTPDownload implements IDownload, IHasDownloadListeners {
 						throw new SourceNotAvaibleException();
 					}
 				} catch (IOException e) {
-					e.printStackTrace();
+					//					e.printStackTrace();
 					canLaunch = false;
 					throw new SourceNotAvaibleException();
 				}
@@ -228,14 +223,17 @@ public class HTTPDownload implements IDownload, IHasDownloadListeners {
 	 * @see de.java.netUtils.interfaces.IDownload#startDownload()
 	 */
 	@Override
-	public void startDownload() throws DownloadAlreadyStartedException {
+	public void startDownload() throws DownloadAlreadyStartedException, DownloadCanNotBeLaunchedException {
 		if (!started) {
 
 			if (canLaunch) {
 				started = true;
 				onStarted();
 				download_Started_millis = System.currentTimeMillis();
+				downloader = getDownloaderThread();
 				downloader.start();
+			} else {
+				throw new DownloadCanNotBeLaunchedException();
 			}
 
 		} else {
@@ -335,7 +333,8 @@ public class HTTPDownload implements IDownload, IHasDownloadListeners {
 	 */
 	@Override
 	public String getDownloadProgess_asString() {
-		return "HTTPDownload [ " + uri + " | Running: " + (System.currentTimeMillis() - download_Started_millis) + " milliseconds ] "
-				+ bytesDownloaded() + " of " + bytesToDownload() + " Bytes (" + downloadPercentDone() + " %) downloaded.";
+		return "HTTPDownload [ " + uri + " | Running: " + (System.currentTimeMillis() - download_Started_millis)
+				+ " milliseconds ] " + bytesDownloaded() + " of " + bytesToDownload() + " Bytes ("
+				+ downloadPercentDone() + " %) downloaded.";
 	}
 }

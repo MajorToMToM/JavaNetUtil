@@ -1,7 +1,5 @@
 package de.java.netUtils.serversystems;
 
-import java.util.logging.Logger;
-
 import de.java.netUtils.interfaces.IConnection;
 import de.java.netUtils.interfaces.IPort;
 

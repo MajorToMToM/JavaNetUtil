@@ -81,8 +81,8 @@ public class DownloadFactory {
 	 * <hr>
 	 * @param url The url.
 	 * @return Returns a valid {@link IDownload} object or null if the url is not valid.
-	 * @throws DownloadAlreadyStartedException
-	 * @throws SourceNotAvaibleException
+	 * @throws DownloadAlreadyStartedException <b>Can be ignored because this is never thrown on freshly initialized {@link IDownload} objects.</b>
+	 * @throws SourceNotAvaibleException The URL is checked on the invokation of the setURI method.
 	 * @throws URISyntaxException
 	 * @throws NoValidProtocolSpecifiedException 
 	 */
@@ -101,7 +101,7 @@ public class DownloadFactory {
 			downloadObject.setURI(new URI(url));
 			return downloadObject;
 		}
-		
+
 		throw new NoValidProtocolSpecifiedException();
 
 	}

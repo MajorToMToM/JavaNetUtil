@@ -1,24 +1,10 @@
 package de.java.netUtils;
 
-import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.List;
 import java.util.logging.Logger;
 
 import org.junit.Test;
 
-import de.java.netUtils.DownloadFactory.PROTOCOL;
-import de.java.netUtils.download.HTTPDownload;
-import de.java.netUtils.exceptions.download.DownloadAlreadyStartedException;
-import de.java.netUtils.exceptions.download.SourceNotAvaibleException;
-import de.java.netUtils.handlingSystem.listeners.implementations.IDownloadListener;
-import de.java.netUtils.interfaces.IConnection;
-import de.java.netUtils.interfaces.IPort;
-import de.java.netUtils.interfaces.IPortManager;
 import de.java.netUtils.serversystems.server.implementations.TCPServer;
-import de.java.netUtils.uri.URI_Utils;
 
 /**
  * <hr>

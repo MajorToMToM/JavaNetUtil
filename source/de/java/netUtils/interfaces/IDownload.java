@@ -3,6 +3,7 @@ package de.java.netUtils.interfaces;
 import java.net.URI;
 
 import de.java.netUtils.exceptions.download.DownloadAlreadyStartedException;
+import de.java.netUtils.exceptions.download.DownloadCanNotBeLaunchedException;
 import de.java.netUtils.exceptions.download.DownloadNotFinishedException;
 import de.java.netUtils.exceptions.download.DownloadNotStartedException;
 import de.java.netUtils.exceptions.download.SourceNotAvaibleException;
@@ -83,7 +84,7 @@ public interface IDownload {
 	 * <hr>
 	 * @throws DownloadAlreadyStartedException When the download was already started this exception is provoked.
 	 */
-	public void startDownload() throws DownloadAlreadyStartedException;
+	public void startDownload() throws DownloadAlreadyStartedException, DownloadCanNotBeLaunchedException;
 
 	/**
 	 * 

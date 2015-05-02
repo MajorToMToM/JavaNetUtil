@@ -6,19 +6,12 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.net.ssl.HttpsURLConnection;
 
-import de.java.netUtils.exceptions.download.DownloadAlreadyStartedException;
-import de.java.netUtils.exceptions.download.DownloadNotFinishedException;
 import de.java.netUtils.exceptions.download.DownloadNotStartedException;
-import de.java.netUtils.exceptions.download.SourceNotAvaibleException;
-import de.java.netUtils.handlingSystem.listeners.implementations.IDownloadListener;
 import de.java.netUtils.handlingSystem.listeners.implementations.IHasDownloadListeners;
 import de.java.netUtils.interfaces.IDownload;
-import de.java.netUtils.utils.Math_Utils;
 
 /**
  * <hr>
@@ -39,6 +32,80 @@ import de.java.netUtils.utils.Math_Utils;
  */
 public class HTTPSDownload extends HTTPDownload implements IDownload, IHasDownloadListeners {
 
+
+	/**
+	 * <hr>
+	 * The constructor of HTTPSDownload.java.
+	 * <hr>
+	 */
+	public HTTPSDownload() {
+
+	}
 	
+	/* (non-Javadoc)
+	 * @see de.java.netUtils.download.HTTPDownload#getDownloaderThread()
+	 */
+	@Override
+	protected Thread getDownloaderThread() {
+		return new Thread() {
+
+			/* (non-Javadoc)
+			 * @see java.lang.Thread#run()
+			 */
+			@Override
+			public void run() {
+				super.run();
+
+				try {
+
+					HttpsURLConnection con = (HttpsURLConnection) getConnection(uri);
+					toDownload = getFileSize(con);
+
+					InputStream in = con.getInputStream();
+					final ByteArrayOutputStream out = new ByteArrayOutputStream();
+					final byte[] buf = new byte[256];
+
+					int n = 0;
+					while (-1 != (n = in.read(buf))) {
+						currentDownloaded = currentDownloaded + n;
+						out.write(buf, 0, n);
+					}
+
+					out.close();
+					in.close();
+					con.disconnect();
+
+					downloaded = out.toByteArray();
+					finished = true;
+
+					download_Finished_millis = System.currentTimeMillis();
+
+					onFinished();
+
+				} catch (IOException e1) {
+
+					try {
+						interruptDownload();
+					} catch (DownloadNotStartedException e) {
+						e.printStackTrace();
+					}
+
+					e1.printStackTrace();
+
+				}
+
+			}
+
+		};
+	}
+	
+	/* (non-Javadoc)
+	 * @see de.java.netUtils.download.HTTPDownload#getConnection(java.net.URI)
+	 */
+	@Override
+	protected HttpURLConnection getConnection(URI uri) throws IOException {
+		final URL u = uri.toURL();
+		return (HttpsURLConnection) u.openConnection();
+	}
 	
 }

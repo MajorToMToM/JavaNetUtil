@@ -1,7 +1,5 @@
 package de.java.netUtils.interfaces;
 
-import java.io.Serializable;
-import java.util.logging.Logger;
 
 /**
  * <hr>

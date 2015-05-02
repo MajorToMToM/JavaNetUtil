@@ -1,6 +1,5 @@
 package de.java.netUtils.interfaces;
 
-import java.util.logging.Logger;
 
 /**
  * <hr>

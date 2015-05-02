@@ -2,18 +2,10 @@ package de.java.netUtils.serversystems.client.implementations;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
-import de.java.netUtils.interfaces.IPort;
 import de.java.netUtils.serversystems.client.Abstract_Client;
 
 /**

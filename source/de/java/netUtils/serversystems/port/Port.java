@@ -5,7 +5,6 @@ import java.net.DatagramSocket;
 import java.net.ServerSocket;
 import java.util.logging.Logger;
 
-import de.java.netUtils.interfaces.IConnection;
 import de.java.netUtils.interfaces.IPort;
 
 /**

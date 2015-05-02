@@ -1,5 +1,6 @@
-package de.java.netUtils.interfaces;
+package de.java.netUtils.exceptions.download;
 
+import java.util.logging.Logger;
 
 /**
  * <hr>
@@ -18,8 +19,17 @@ package de.java.netUtils.interfaces;
  *
  * <hr>
  */
-public interface IClient extends IConnection, ICanOpenConnection {
+public class DownloadCanNotBeLaunchedException extends Exception {
+	/**
+	 * The Logger of the DownloadCanNotBeLaunched Class
+	 */
+	private static final Logger LOGGER = Logger.getLogger(DownloadCanNotBeLaunchedException.class.getName());
 
-	void sendMessage(String message);
-
+	/**
+	 * The standard constructor of the DownloadCanNotBeLaunched class
+	 */
+	public DownloadCanNotBeLaunchedException() {
+		super("The Download can not be launched. The required parameters are not valid maybe!");
+	}
 }
+
