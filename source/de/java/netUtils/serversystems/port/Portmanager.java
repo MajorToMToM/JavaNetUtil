@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import de.java.netUtils.interfaces.IPort;
@@ -34,8 +35,7 @@ public class Portmanager implements IPortManager {
 
 	private static Portmanager INSTANCE;
 
-	private HashMap<Integer, IPort> portMap = (HashMap<Integer, IPort>) Collections
-			.synchronizedMap(new HashMap<Integer, IPort>());
+	private Map<Integer, IPort> portMap = Collections.synchronizedMap(new HashMap<Integer, IPort>());
 
 	public static final Portmanager getInstance() {
 		Portmanager r = INSTANCE;
@@ -68,15 +68,21 @@ public class Portmanager implements IPortManager {
 		if (creation == PORT_CREATION.EXPLICIT) {
 			int portId = portNumbers.get(0);
 
-			if (IPort.isPortNumberValid(portId) && portMap.containsKey(portId)) {
-				if (portMap.get(portId).isAvaible()) {
-					port = portMap.get(portId);
+			if (isPortAvaible(portId)) {
+				if (portMap.containsKey(port)) {
+					if (portMap.get(portId).isAvaible()) {
+						port = portMap.get(portId);
+					}
+				} else {
+					port = new Port();
+					port.setPortNumber(portId);
+					portMap.put(portId, port);
 				}
 			}
 		}
 
 		if (creation == PORT_CREATION.FIRSTFREE) {
-
+			
 		}
 
 		if (creation == PORT_CREATION.EXPLICIT_LIST) {
@@ -90,6 +96,10 @@ public class Portmanager implements IPortManager {
 		return port;
 	}
 
+	private final boolean isPortAvaible(Integer port) {
+		return (IPort.isPortNumberValid(port) );
+	}
+	
 	/* (non-Javadoc)
 	 * @see de.java.netUtils.interfaces.IPortManager#getAllPorts()
 	 */

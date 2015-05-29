@@ -1,12 +1,16 @@
 package de.java.netUtils.serversystems.server.implementations;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.logging.Logger;
 
+import de.java.netUtils.handlingSystem.event.IEvent;
+import de.java.netUtils.handlingSystem.listeners.implementations.IReceivedMessageListener;
 import de.java.netUtils.serversystems.client.implementations.TCPClient;
 import de.java.netUtils.serversystems.server.Abstract_Server;
 
@@ -33,6 +37,8 @@ public class TCPServer extends Abstract_Server<TCPClient> {
 	 */
 	private static final Logger LOGGER = Logger.getLogger(TCPServer.class.getName());
 
+	private final List<IReceivedMessageListener> messageHandlers = new ArrayList<>();
+
 	private ServerSocket socket;
 	private boolean running;
 	private final List<TCPClient> clients = new ArrayList<>();
@@ -41,7 +47,6 @@ public class TCPServer extends Abstract_Server<TCPClient> {
 	 * The standard constructor of the TCPServer class
 	 */
 	public TCPServer() {
-
 	}
 
 	/* (non-Javadoc)
@@ -50,6 +55,7 @@ public class TCPServer extends Abstract_Server<TCPClient> {
 	@Override
 	public final void addClient(TCPClient client) {
 		clients.add(client);
+		listenForClientMessage(client);
 	}
 
 	/* (non-Javadoc)
@@ -75,9 +81,12 @@ public class TCPServer extends Abstract_Server<TCPClient> {
 	@Override
 	public void listenForConnection() {
 		try {
+			LOGGER.info("Listening now for connections ...");
 			while (running) {
+				LOGGER.info("Listening for client ...");
 				TCPClient client = new TCPClient();
 				client.setSocket(socket.accept());
+				LOGGER.info("Found client!" + client);
 				addClient(client);
 			}
 		} catch (IOException e) {
@@ -89,8 +98,19 @@ public class TCPServer extends Abstract_Server<TCPClient> {
 	 * @see de.java.netUtils.interfaces.ICanReceiveMessages#receiveMessage()
 	 */
 	@Override
-	public String receiveMessage() {
-		return null;
+	public void listenForClientMessage(TCPClient client) {
+		try {
+			LOGGER.info("Listening for Client Message ... ");
+			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(client.getSocket()
+					.getInputStream()));
+			char[] buffer = new char[200];
+			int anzahlZeichen = bufferedReader.read(buffer, 0, 200); // blockiert bis Nachricht empfangen
+			String nachricht = new String(buffer, 0, anzahlZeichen);
+
+			onMessageReceived(nachricht, client);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/* (non-Javadoc)
@@ -109,13 +129,51 @@ public class TCPServer extends Abstract_Server<TCPClient> {
 	@Override
 	public final void closeServer() {
 		try {
+			LOGGER.info("Closing Server ...");
 			closeConnection();
 			socket.close();
 			running = false;
+			LOGGER.info("Closed Server!");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+
+	public void startServer() {
+		try {
+			LOGGER.info("Starting Server on port " + getSourcePort().getPortNumber());
+			socket = new ServerSocket(getSourcePort().getPortNumber());
+			running = true;
+			
+			Thread listener = new Thread() {
+				 /* (non-Javadoc)
+				 * @see java.lang.Thread#run()
+				 */
+				@Override
+				public void run() {
+					listenForConnection();
+				}
+			};
+			listener.start();
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/* (non-Javadoc)
+	 * @see de.java.netUtils.interfaces.IServer#onMessageReceived()
+	 */
+	@Override
+	public void onMessageReceived(String message, TCPClient byClient) {
+		for (IReceivedMessageListener listener : messageHandlers) {
+			listener.onMessage(message, byClient);
+		}
+	};
+
+	public final void addMessageListener(IReceivedMessageListener listener) {
+		messageHandlers.add(listener);
 	}
 
 }

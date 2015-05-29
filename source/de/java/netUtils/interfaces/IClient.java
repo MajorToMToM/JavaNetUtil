@@ -1,5 +1,6 @@
 package de.java.netUtils.interfaces;
 
+import de.java.netUtils.exceptions.server.ConnectionNotEstablishedException;
 
 /**
  * <hr>
@@ -20,6 +21,6 @@ package de.java.netUtils.interfaces;
  */
 public interface IClient extends IConnection, ICanOpenConnection {
 
-	void sendMessage(String message);
+	void sendMessage(String message) throws ConnectionNotEstablishedException;
 
 }

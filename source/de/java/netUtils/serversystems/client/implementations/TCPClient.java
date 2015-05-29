@@ -2,10 +2,13 @@ package de.java.netUtils.serversystems.client.implementations;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.logging.Logger;
 
+import de.java.netUtils.exceptions.server.ConnectionNotEstablishedException;
 import de.java.netUtils.serversystems.client.Abstract_Client;
 
 /**
@@ -46,13 +49,20 @@ public class TCPClient extends Abstract_Client {
 	 * @see de.java.netUtils.interfaces.IClient#sendMessage(java.lang.String)
 	 */
 	@Override
-	public void sendMessage(String message) {
-		try {
-			OutputStream streamOut = socket.getOutputStream();
-			streamOut.write(message.getBytes());
-			streamOut.flush();
-		} catch (IOException e) {
-			e.printStackTrace();
+	public void sendMessage(String message) throws ConnectionNotEstablishedException {
+		if (socket.isConnected()) {
+			try {
+				LOGGER.info("Sending Message '" + message + "' to Server ... " + serverIPAddress + ":"
+						+ getDestinationPort().getPortNumber());
+
+				PrintWriter printWriter = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()));
+				printWriter.print(message);
+				printWriter.flush();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		} else {
+			throw new ConnectionNotEstablishedException();
 		}
 	}
 
@@ -63,6 +73,7 @@ public class TCPClient extends Abstract_Client {
 	public void closeConnection() {
 		try {
 			socket.close();
+			socket = null;
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -72,15 +83,10 @@ public class TCPClient extends Abstract_Client {
 	 * @see de.java.netUtils.interfaces.ICanOpenConnection#openConnection()
 	 */
 	@Override
-	public void openConnection() {
-		try {
-			setSocket(new Socket(serverIPAddress, getDestinationPort().getPortNumber(), null, getSourcePort()
-					.getPortNumber()));
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+	public void openConnection() throws IOException {
+		LOGGER.info("Opening connection to ... " + serverIPAddress + ":" + getDestinationPort().getPortNumber());
+		setSocket(new Socket(serverIPAddress, getDestinationPort().getPortNumber(), null, getSourcePort()
+				.getPortNumber()));
 	}
 
 	/**
@@ -119,6 +125,14 @@ public class TCPClient extends Abstract_Client {
 	 */
 	public void setSocket(Socket socket) {
 		this.socket = socket;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "TCPClient [socket=" + socket + ", serverIPAddress=" + serverIPAddress + "]";
 	}
 
 }

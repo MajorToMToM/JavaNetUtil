@@ -34,7 +34,7 @@ public abstract class Abstract_Server<T extends IClient> extends Abstract_Connec
 	 * @see de.java.netUtils.interfaces.IServer#startServer()
 	 */
 	@Override
-	public final void startServer() {
+	public void startServer() {
 		listenForConnection();
 	}
 

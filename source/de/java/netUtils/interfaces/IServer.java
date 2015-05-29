@@ -19,7 +19,7 @@ import java.util.Collection;
  *
  * <hr>
  */
-public interface IServer<T extends IClient> extends IConnection, ICanReceiveMessages {
+public interface IServer<T extends IClient> extends IConnection {
 
 	public void addClient(T client);
 
@@ -27,6 +27,10 @@ public interface IServer<T extends IClient> extends IConnection, ICanReceiveMess
 
 	public Collection<T> getClients();
 
+	public void listenForClientMessage(T client);
+	
 	public void startServer();
 
+	public void onMessageReceived(String message, T byClient);
+	
 }

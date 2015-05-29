@@ -50,11 +50,10 @@ public class DownloadTester {
 	public void test() {
 
 		try {
-			IDownload dl = DownloadFactory.getInstance().createDownload("jg-erf.ddns.net/index.html",
-					PROTOCOL.HTTP);
-		
-//			dl = DownloadFactory.getInstance().createDownload("http://jg-erf.ddns.net/files/ERF_ConfGen.jar");
-			
+//			IDownload dl = DownloadFactory.getInstance().createDownload("jg-erf.ddns.net/index.html", PROTOCOL.HTTP);
+			IDownload dl = DownloadFactory.getInstance().createDownload("jg-erf.ddns.net/files/ERF_ConfGen.jar", PROTOCOL.HTTP);
+			//			dl = DownloadFactory.getInstance().createDownload("http://jg-erf.ddns.net/files/ERF_ConfGen.jar");
+
 			dl.addDownloadListener(new IDownloadListener() {
 
 				@Override
@@ -72,39 +71,57 @@ public class DownloadTester {
 					System.out.println("Finished!");
 					try {
 						try {
-							System.out.println("Downloaded this :\n" + Download_Utils.retrieveListOfRows(dl.getDownloaded()));
+							System.out.println("Downloaded this :\n"
+									+ Download_Utils.retrieveListOfRows(dl.getDownloaded()));
 						} catch (IOException e) {
-							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
 					} catch (DownloadNotFinishedException | DownloadNotStartedException e) {
 						e.printStackTrace();
 					}
 				}
+
+				@Override
+				public void onProgress(double percent) {
+					System.out.println(dl.getDownloadProgess_asString());
+				}
 			});
 
 			try {
-
 				dl.startDownload();
 
 				while (!dl.isFinished() && !dl.isDownloadInterrupted()) {
-					System.out.println(dl.getDownloadProgess_asString());
-				}
 
+				}
 			} catch (DownloadAlreadyStartedException e) {
+				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (DownloadCanNotBeLaunchedException e) {
+				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
+
 		} catch (SourceNotAvaibleException e1) {
 			e1.printStackTrace();
 		} catch (URISyntaxException e1) {
 			e1.printStackTrace();
-//		} catch (NoValidProtocolSpecifiedException e) {
-//			e.printStackTrace();
+			//		} catch (NoValidProtocolSpecifiedException e) {
+			//			e.printStackTrace();
 		}
-		
-		
+
+		//		try {
+		//
+		//			
+		//
+		//			while (!dl.isFinished() && !dl.isDownloadInterrupted()) {
+		//				
+		//			}
+		//
+		//		} catch (DownloadAlreadyStartedException e) {
+		//			e.printStackTrace();
+		//		} catch (DownloadCanNotBeLaunchedException e) {
+		//			e.printStackTrace();
+		//		}
+
 	}
 }

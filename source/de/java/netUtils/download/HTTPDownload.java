@@ -86,6 +86,10 @@ public class HTTPDownload implements IDownload, IHasDownloadListeners {
 					while (-1 != (n = in.read(buf))) {
 						currentDownloaded = currentDownloaded + n;
 						out.write(buf, 0, n);
+						
+						for (IDownloadListener listener : listeners) {
+							listener.onProgress(downloadPercentDone());
+						}
 					}
 
 					out.close();

@@ -22,6 +22,7 @@ public interface IDownloadListener {
 	public void onStarted();
 	public void onInterrupted();
 	public void onFinished();
+	public void onProgress(double percent);
 	
 }
 

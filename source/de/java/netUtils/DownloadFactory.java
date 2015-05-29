@@ -45,7 +45,7 @@ public class DownloadFactory {
 	}
 
 	public enum PROTOCOL {
-		HTTP("http"), HTTPS("https");
+		HTTP("http"), HTTPS("https"), FILE("file");
 
 		private final String shortVal;
 

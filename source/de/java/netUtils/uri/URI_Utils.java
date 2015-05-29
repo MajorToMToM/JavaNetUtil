@@ -3,6 +3,8 @@ package de.java.netUtils.uri;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import de.java.netUtils.DownloadFactory;
+
 /**
  * <hr>
  * <li><strong>Project   </strong>JavaNetUtil</li>
@@ -28,20 +30,64 @@ public class URI_Utils {
 	private URI_Utils() {
 	}
 
+	/**
+	 * 
+	 * <hr>
+	 *
+	 * Create an {@link URI} object with a specific protocol and a given String.<br>
+	 *
+	 * <hr>
+	 * @param protocol
+	 * @param target
+	 * @return
+	 * @throws URISyntaxException
+	 */
 	public static final URI createURI(String protocol, String target) throws URISyntaxException {
 		return new URI(protocol + "://" + target);
 	}
 
+	/**
+	 * 
+	 * <hr>
+	 *
+	 * This creates an {@link URI} with "file" protocol.<br>
+	 *
+	 * <hr>
+	 * @param target
+	 * @return
+	 * @throws URISyntaxException
+	 */
 	public static final URI createFILEURI(String target) throws URISyntaxException {
-		return createURI("file", target);
-	}
-	
-	public static final URI createHTTPURI(String target) throws URISyntaxException {
-		return createURI("http", target);
+		return createURI(DownloadFactory.PROTOCOL.FILE.getShortVal(), target);
 	}
 
+	/**
+	 * 
+	 * <hr>
+	 *
+	 * This creates an {@link URI} with "http" protocol.<br>
+	 *
+	 * <hr>
+	 * @param target
+	 * @return
+	 * @throws URISyntaxException
+	 */
+	public static final URI createHTTPURI(String target) throws URISyntaxException {
+		return createURI(DownloadFactory.PROTOCOL.HTTP.getShortVal(), target);
+	}
+
+	/**
+	 * 
+	 * <hr>
+	 *
+	 * This creates an {@link URI} with "https" protocol.<br>
+	 *
+	 * <hr>
+	 * @param target
+	 * @return
+	 * @throws URISyntaxException
+	 */
 	public static final URI createHTTPSURI(String target) throws URISyntaxException {
-		return createURI("https", target);
+		return createURI(DownloadFactory.PROTOCOL.HTTPS.getShortVal(), target);
 	}
 }
-

@@ -1,4 +1,4 @@
-package de.java.netUtils.utils;
+package de.java.netUtils.handlingSystem.listeners.implementations;
 
 import java.util.logging.Logger;
 
@@ -19,30 +19,9 @@ import java.util.logging.Logger;
  *
  * <hr>
  */
-public class Math_Utils {
-	/**
-	 * The Logger of the Math_Utils Class
-	 */
-	private static final Logger LOGGER = Logger.getLogger(Math_Utils.class.getName());
+public interface IReceivedMessageListener {
 
-	/**
-	 * The standard constructor of the Math_Utils class
-	 */
-	private Math_Utils() {
-	}
-
-	/**
-	 * 
-	 * <hr>
-	 *
-	 * Calculate the percentage of the maximum value and the current value.<br>
-	 *
-	 * <hr>
-	 * @param maxValue
-	 * @param currentValue
-	 * @return
-	 */
-	public static final double calcPercent(double maxValue, double currentValue) {
-		return (maxValue > 0) ? currentValue / maxValue * 100 : 0.0;
-	}
+	public void onMessage(String message, Object source);
+	
 }
+

@@ -1,9 +1,18 @@
 package de.java.netUtils;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
 import org.junit.Test;
 
+import de.java.netUtils.exceptions.server.ConnectionNotEstablishedException;
+import de.java.netUtils.handlingSystem.listeners.implementations.IReceivedMessageListener;
+import de.java.netUtils.interfaces.IPort;
+import de.java.netUtils.interfaces.IPortManager.PORT_CREATION;
+import de.java.netUtils.serversystems.client.implementations.TCPClient;
+import de.java.netUtils.serversystems.port.Portmanager;
 import de.java.netUtils.serversystems.server.implementations.TCPServer;
 
 /**
@@ -35,12 +44,63 @@ public class ServerTester {
 	 * <hr>
 	 */
 	public ServerTester() {
-		
+
 	}
-	
+
 	@Test
 	public void test() {
+
+		/*
+		 * SERVER
+		 */
+
 		TCPServer server = new TCPServer();
+
+		List<Integer> serverPorts = new ArrayList<>();
+		serverPorts.add(1337);
+
+		server.setSourcePort(Portmanager.getInstance().getPort(PORT_CREATION.EXPLICIT, serverPorts));
+		server.startServer();
+
+		server.addMessageListener(new IReceivedMessageListener() {
+
+			@Override
+			public void onMessage(String message, Object source) {
+				LOGGER.info("Received Message: '" + message + "' from " + source);
+			}
+		});
+		
+		LOGGER.info("Started Server...");
+
+		/*
+		 * CLIENT
+		 */
+
+		List<Integer> clientPorts = new ArrayList<>();
+		clientPorts.add(1338);
+
+		TCPClient client = new TCPClient();
+		client.setServerIPAddress("127.0.0.1");
+//		client.setServerIPAddress("JG-ERF.DDNS.NET");
+
+		client.setSourcePort(Portmanager.getInstance().getPort(PORT_CREATION.EXPLICIT, clientPorts));
+		client.setDestinationPort(server.getSourcePort());
+
+		try {
+			client.openConnection();
+			try {
+				client.sendMessage("Hi");
+			} catch (ConnectionNotEstablishedException e) {
+				e.printStackTrace();
+			}
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+
+		
+
+		//		server.closeServer();
+		//		client.closeConnection();
+
 	}
 }
-

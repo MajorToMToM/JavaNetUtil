@@ -1,5 +1,7 @@
 package de.java.netUtils.interfaces;
 
+import java.io.IOException;
+
 
 /**
  * <hr>
@@ -20,7 +22,7 @@ package de.java.netUtils.interfaces;
  */
 public interface ICanOpenConnection {
 
-	public void openConnection();
+	public void openConnection() throws IOException;
 	
 }
 

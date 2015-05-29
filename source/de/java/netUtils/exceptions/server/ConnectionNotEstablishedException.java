@@ -1,5 +1,6 @@
-package de.java.netUtils.interfaces;
+package de.java.netUtils.exceptions.server;
 
+import java.util.logging.Logger;
 
 /**
  * <hr>
@@ -18,9 +19,17 @@ package de.java.netUtils.interfaces;
  *
  * <hr>
  */
-public interface ICanReceiveMessages {
+public class ConnectionNotEstablishedException extends Exception {
+	/**
+	 * The Logger of the ConnectionNotEstablishedException Class
+	 */
+	private static final Logger LOGGER = Logger.getLogger(ConnectionNotEstablishedException.class.getName());
 
-	public String receiveMessage();
-	
+	/**
+	 * The standard constructor of the ConnectionNotEstablishedException class
+	 */
+	public ConnectionNotEstablishedException() {
+		super("Connection is not established!");
+	}
 }
 
