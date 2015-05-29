@@ -89,7 +89,7 @@ public class DownloadFactory {
 			URISyntaxException, NoValidProtocolSpecifiedException {
 		IDownload downloadObject = null;
 
-		if (url.startsWith(PROTOCOL.HTTP.getShortVal() + "://")) {
+		if (url.startsWith(PROTOCOL.HTTP.getShortVal() + URI_Utils.PROT_SUFFIX)) {
 			downloadObject = new HTTPDownload();
 			try {
 				downloadObject.setURI(new URI(url));
@@ -99,7 +99,7 @@ public class DownloadFactory {
 			return downloadObject;
 		}
 
-		if (url.startsWith(PROTOCOL.HTTPS.getShortVal() + "://")) {
+		if (url.startsWith(PROTOCOL.HTTPS.getShortVal() + URI_Utils.PROT_SUFFIX)) {
 			downloadObject = new HTTPSDownload();
 			try {
 				downloadObject.setURI(new URI(url));
@@ -132,8 +132,8 @@ public class DownloadFactory {
 
 		if (protocol == PROTOCOL.HTTP) {
 
-			if (url.startsWith(PROTOCOL.HTTP.getShortVal() + "://")) {
-				url = url.substring(PROTOCOL.HTTP.getShortVal().length() + "://".length());
+			if (url.startsWith(PROTOCOL.HTTP.getShortVal() + URI_Utils.PROT_SUFFIX)) {
+				url = url.substring(PROTOCOL.HTTP.getShortVal().length() + URI_Utils.PROT_SUFFIX.length());
 			}
 
 			downloadObject = new HTTPDownload();
@@ -147,8 +147,8 @@ public class DownloadFactory {
 
 		if (protocol == PROTOCOL.HTTPS) {
 
-			if (url.startsWith(PROTOCOL.HTTP.getShortVal() + "://")) {
-				url = url.substring(PROTOCOL.HTTP.getShortVal().length() + "://".length());
+			if (url.startsWith(PROTOCOL.HTTP.getShortVal() + URI_Utils.PROT_SUFFIX)) {
+				url = url.substring(PROTOCOL.HTTP.getShortVal().length() + URI_Utils.PROT_SUFFIX.length());
 			}
 
 			downloadObject = new HTTPSDownload();
